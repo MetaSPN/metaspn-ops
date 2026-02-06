@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metaspn-ops"
+version = "0.1.0"
+description = "Standard inbox/outbox worker runtime for MetaSPN agent systems"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "MetaSPN Contributors" }
+]
+keywords = ["metaspn", "agents", "worker", "queue", "scheduler"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: System :: Distributed Computing",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2.2",
+  "twine>=5.1.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/metaspn/metaspn-ops"
+Repository = "https://github.com/metaspn/metaspn-ops"
+Issues = "https://github.com/metaspn/metaspn-ops/issues"
+
+[project.scripts]
+metaspn = "metaspn_ops.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
