@@ -251,6 +251,33 @@ Notes:
 - `--max-attempts` defaults to `1` in demo mode for predictable failure behavior.
 - Re-running with the same inputs is idempotent at output artifact level.
 
+## Token Promise Pipeline
+
+Run token resolution -> health scoring -> promise evaluation -> promise calibration:
+
+```bash
+metaspn token run-local \
+  --workspace . \
+  --window-key 2026-02-06 \
+  --limit 100 \
+  --baseline-weight 1.0
+```
+
+Outputs:
+- `./store/token_resolutions.jsonl`
+- `./store/token_health_scores.jsonl`
+- `./store/promise_evaluations.jsonl`
+- `./store/promise_manual_reviews.jsonl`
+- `./store/promise_calibration_reports.jsonl`
+
+Evaluation paths:
+- `on_chain` auto-evaluation
+- `observable_signal` auto-evaluation
+- `human_judgment` routed to manual review queue (`promise_manual_reviews.jsonl`)
+
+Optional digest integration:
+- `DigestWorker` supports `include_token_health=true` and `include_promise_items=true` in task payload.
+
 ## Queue layout
 
 ```text

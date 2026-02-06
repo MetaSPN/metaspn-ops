@@ -16,6 +16,14 @@ from .m3 import (
     run_local_m3,
 )
 from .demo import ingest_manual_outcomes, run_demo_once, seed_resolved_entities
+from .token_promises import (
+    PromiseCalibrationWorker,
+    PromiseEvaluatorWorker,
+    ResolveTokenWorker,
+    TokenHealthScorerWorker,
+    TokenPromiseStore,
+    run_local_token_promises,
+)
 
 __all__ = [
     "HeuristicEntityResolver",
@@ -42,4 +50,10 @@ __all__ = [
     "run_demo_once",
     "seed_resolved_entities",
     "ingest_manual_outcomes",
+    "TokenPromiseStore",
+    "ResolveTokenWorker",
+    "TokenHealthScorerWorker",
+    "PromiseEvaluatorWorker",
+    "PromiseCalibrationWorker",
+    "run_local_token_promises",
 ]

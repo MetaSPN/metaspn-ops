@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.8 - 2026-02-06
+
+- Added token/promise workers:
+  - `ResolveTokenWorker`
+  - `TokenHealthScorerWorker`
+  - `PromiseEvaluatorWorker`
+  - `PromiseCalibrationWorker`
+- Added `metaspn token run-local` orchestration command
+- Added `human_judgment` promise routing to manual review artifacts
+- Extended digest generation with optional token health and promise evaluation sections
+- Extended M3 calibration report output with promise predictive accuracy and weight-adjustment proposal passthrough
+- Added integration tests for token signal -> promise evaluation -> calibration flow
+
 ## 0.1.7 - 2026-02-06
 
 - Added demo-oriented one-shot orchestration: `metaspn demo run-once`

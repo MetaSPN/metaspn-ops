@@ -38,6 +38,8 @@ class M3JsonlStore:
     failures_path: Path = field(init=False)
     calibration_reports_path: Path = field(init=False)
     calibration_reviews_path: Path = field(init=False)
+    promise_evaluations_path: Path = field(init=False)
+    promise_calibration_reports_path: Path = field(init=False)
 
     def __init__(self, workspace: str | Path):
         self.workspace = Path(workspace)
@@ -49,6 +51,8 @@ class M3JsonlStore:
         self.failures_path = self.store_dir / "m3_failures.jsonl"
         self.calibration_reports_path = self.store_dir / "m3_calibration_reports.jsonl"
         self.calibration_reviews_path = self.store_dir / "m3_calibration_reviews.jsonl"
+        self.promise_evaluations_path = self.store_dir / "promise_evaluations.jsonl"
+        self.promise_calibration_reports_path = self.store_dir / "promise_calibration_reports.jsonl"
 
     def attempts_in_window(self, *, window_start: str, window_end: str) -> list[dict[str, Any]]:
         start = _parse_iso(window_start)
@@ -294,6 +298,13 @@ class CalibrationReporterWorker:
                 "strategy": "no_change",
             }
 
+        promise_evals = self.store._read_jsonl(self.store.promise_evaluations_path)
+        p_total = len(promise_evals)
+        p_correct = sum(1 for r in promise_evals if bool(r.get("correct")))
+        promise_predictive_accuracy = 0.0 if p_total == 0 else p_correct / p_total
+        promise_reports = self.store._read_jsonl(self.store.promise_calibration_reports_path)
+        latest_promise_report = promise_reports[-1] if promise_reports else None
+
         report_id = f"calib_{_stable_hash([window_start, window_end, str(total), str(failed), str(proposed['score_threshold']), str(proposed['cooldown_hours'])])}"
         row = {
             "id": report_id,
@@ -303,6 +314,10 @@ class CalibrationReporterWorker:
             "failures": failed,
             "failure_rate": round(failure_rate, 6),
             "proposed_policy": proposed,
+            "promise_predictive_accuracy": round(promise_predictive_accuracy, 6),
+            "promise_weight_adjustment_proposal": (
+                latest_promise_report.get("proposed_weight_adjustments") if latest_promise_report else None
+            ),
             "occurred_at": _utc_now_iso(),
         }
 

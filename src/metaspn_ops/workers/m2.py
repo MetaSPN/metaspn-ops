@@ -33,6 +33,9 @@ class M2JsonlStore:
     digests_path: Path = field(init=False)
     drafts_path: Path = field(init=False)
     approvals_path: Path = field(init=False)
+    token_health_scores_path: Path = field(init=False)
+    promise_evaluations_path: Path = field(init=False)
+    promise_manual_reviews_path: Path = field(init=False)
 
     def __init__(self, workspace: str | Path):
         self.workspace = Path(workspace)
@@ -42,6 +45,9 @@ class M2JsonlStore:
         self.digests_path = self.store_dir / "m2_digests.jsonl"
         self.drafts_path = self.store_dir / "m2_drafts.jsonl"
         self.approvals_path = self.store_dir / "m2_approvals.jsonl"
+        self.token_health_scores_path = self.store_dir / "token_health_scores.jsonl"
+        self.promise_evaluations_path = self.store_dir / "promise_evaluations.jsonl"
+        self.promise_manual_reviews_path = self.store_dir / "promise_manual_reviews.jsonl"
 
     def recommendation_candidates(self) -> list[dict[str, Any]]:
         rows = self._read_jsonl(self.routes_path)
@@ -122,6 +128,8 @@ class DigestWorker:
         top_n = int(task.payload.get("top_n", 10))
         candidates = self.store.recommendation_candidates()
         selected = candidates[:top_n]
+        include_token_health = bool(task.payload.get("include_token_health", False))
+        include_promise_items = bool(task.payload.get("include_promise_items", False))
 
         digest_id = f"digest_{_stable_hash([window_key, str(top_n), *[str(r.get('id')) for r in selected]])}"
         digest = {
@@ -141,6 +149,45 @@ class DigestWorker:
                 for i, r in enumerate(selected)
             ],
         }
+        if include_token_health:
+            token_rows = self.store._read_jsonl(self.store.token_health_scores_path)
+            digest["token_health"] = sorted(
+                [
+                    {
+                        "token_id": r.get("token_id"),
+                        "network": r.get("network"),
+                        "health_score": r.get("health_score"),
+                    }
+                    for r in token_rows
+                ],
+                key=lambda r: (-float(r.get("health_score", 0)), str(r.get("token_id", ""))),
+            )[:top_n]
+        if include_promise_items:
+            eval_rows = self.store._read_jsonl(self.store.promise_evaluations_path)
+            manual_rows = self.store._read_jsonl(self.store.promise_manual_reviews_path)
+            digest["promise_items"] = {
+                "evaluated": sorted(
+                    [
+                        {
+                            "promise_id": r.get("promise_id"),
+                            "evaluation_path": r.get("evaluation_path"),
+                            "correct": r.get("correct"),
+                        }
+                        for r in eval_rows
+                    ],
+                    key=lambda r: str(r.get("promise_id", "")),
+                )[:top_n],
+                "manual_pending": sorted(
+                    [
+                        {
+                            "promise_id": r.get("promise_id"),
+                            "decision": r.get("decision"),
+                        }
+                        for r in manual_rows
+                    ],
+                    key=lambda r: str(r.get("promise_id", "")),
+                )[:top_n],
+            }
 
         wrote = self.store.write_digest_if_absent(digest)
         return Result(
@@ -151,6 +198,13 @@ class DigestWorker:
                 "candidates": len(candidates),
                 "selected": len(selected),
                 "duplicate": not wrote,
+                "token_health_items": len(digest.get("token_health", [])) if include_token_health else 0,
+                "promise_items": (
+                    len(digest.get("promise_items", {}).get("evaluated", []))
+                    + len(digest.get("promise_items", {}).get("manual_pending", []))
+                )
+                if include_promise_items
+                else 0,
             },
             trace_context=task.trace_context,
         )

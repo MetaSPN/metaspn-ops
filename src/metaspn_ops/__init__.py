@@ -17,6 +17,14 @@ from .workers import (
     OutcomeEvaluatorWorker,
 )
 from .workers import ingest_manual_outcomes, run_demo_once, seed_resolved_entities
+from .workers import (
+    PromiseCalibrationWorker,
+    PromiseEvaluatorWorker,
+    ResolveTokenWorker,
+    TokenHealthScorerWorker,
+    TokenPromiseStore,
+    run_local_token_promises,
+)
 
 __all__ = [
     "FilesystemQueue",
@@ -47,4 +55,10 @@ __all__ = [
     "run_demo_once",
     "seed_resolved_entities",
     "ingest_manual_outcomes",
+    "TokenPromiseStore",
+    "ResolveTokenWorker",
+    "TokenHealthScorerWorker",
+    "PromiseEvaluatorWorker",
+    "PromiseCalibrationWorker",
+    "run_local_token_promises",
 ]

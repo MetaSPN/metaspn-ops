@@ -8,7 +8,7 @@ from pathlib import Path
 
 from .fs_queue import FilesystemQueue
 from .runner import RunnerConfig, WorkerRunner
-from .workers import run_demo_once, run_local_m0, run_local_m1, run_local_m2, run_local_m3
+from .workers import run_demo_once, run_local_m0, run_local_m1, run_local_m2, run_local_m3, run_local_token_promises
 
 
 def _load_worker(spec: str):
@@ -114,6 +114,14 @@ def build_parser() -> argparse.ArgumentParser:
     demo_run_p.add_argument("--resolved-entities-jsonl", default=None)
     demo_run_p.add_argument("--outcomes-jsonl", default=None)
 
+    token_p = sub.add_parser("token")
+    token_sub = token_p.add_subparsers(dest="token_cmd", required=True)
+    token_run_p = token_sub.add_parser("run-local")
+    token_run_p.add_argument("--workspace", default=".")
+    token_run_p.add_argument("--window-key", required=True)
+    token_run_p.add_argument("--limit", type=int, default=100)
+    token_run_p.add_argument("--baseline-weight", type=float, default=1.0)
+
     return parser
 
 
@@ -201,6 +209,16 @@ def main(argv: list[str] | None = None) -> int:
             max_attempts=args.max_attempts,
             resolved_entities_jsonl=Path(args.resolved_entities_jsonl) if args.resolved_entities_jsonl else None,
             outcomes_jsonl=Path(args.outcomes_jsonl) if args.outcomes_jsonl else None,
+        )
+        print(json.dumps(summary))
+        return 0
+
+    if args.command == "token" and args.token_cmd == "run-local":
+        summary = run_local_token_promises(
+            workspace=Path(args.workspace),
+            window_key=args.window_key,
+            limit=args.limit,
+            baseline_weight=args.baseline_weight,
         )
         print(json.dumps(summary))
         return 0
