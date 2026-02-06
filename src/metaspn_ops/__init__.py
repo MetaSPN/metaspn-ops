@@ -16,6 +16,7 @@ from .workers import (
     M3JsonlStore,
     OutcomeEvaluatorWorker,
 )
+from .workers import ingest_manual_outcomes, run_demo_once, seed_resolved_entities
 
 __all__ = [
     "FilesystemQueue",
@@ -43,4 +44,7 @@ __all__ = [
     "FailureAnalystWorker",
     "CalibrationReporterWorker",
     "CalibrationReviewWorker",
+    "run_demo_once",
+    "seed_resolved_entities",
+    "ingest_manual_outcomes",
 ]

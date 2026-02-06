@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.7 - 2026-02-06
+
+- Added demo-oriented one-shot orchestration: `metaspn demo run-once`
+- Added staged queue execution helper for profile -> score -> route -> digest -> optional draft
+- Added manual outcomes ingestion hook for learning pass (`--outcomes-jsonl`)
+- Added resolved-entity seeding helper (`--resolved-entities-jsonl`)
+- Added integration test for full demo queue cycle with idempotent re-run behavior
+
 ## 0.1.6 - 2026-02-06
 
 - Removed `SQLiteQueueStub` from `metaspn_ops.backends` and top-level package exports

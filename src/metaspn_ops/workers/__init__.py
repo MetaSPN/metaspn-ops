@@ -15,6 +15,7 @@ from .m3 import (
     OutcomeEvaluatorWorker,
     run_local_m3,
 )
+from .demo import ingest_manual_outcomes, run_demo_once, seed_resolved_entities
 
 __all__ = [
     "HeuristicEntityResolver",
@@ -38,4 +39,7 @@ __all__ = [
     "CalibrationReporterWorker",
     "CalibrationReviewWorker",
     "run_local_m3",
+    "run_demo_once",
+    "seed_resolved_entities",
+    "ingest_manual_outcomes",
 ]

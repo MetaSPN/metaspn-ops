@@ -8,7 +8,7 @@ from pathlib import Path
 
 from .fs_queue import FilesystemQueue
 from .runner import RunnerConfig, WorkerRunner
-from .workers import run_local_m0, run_local_m1, run_local_m2, run_local_m3
+from .workers import run_demo_once, run_local_m0, run_local_m1, run_local_m2, run_local_m3
 
 
 def _load_worker(spec: str):
@@ -102,6 +102,18 @@ def build_parser() -> argparse.ArgumentParser:
     m3_run_p.add_argument("--success-within-hours", type=int, default=72)
     m3_run_p.add_argument("--auto-review-decision", default=None)
 
+    demo_p = sub.add_parser("demo")
+    demo_sub = demo_p.add_subparsers(dest="demo_cmd", required=True)
+    demo_run_p = demo_sub.add_parser("run-once")
+    demo_run_p.add_argument("--workspace", default=".")
+    demo_run_p.add_argument("--window-key", required=True)
+    demo_run_p.add_argument("--limit", type=int, default=100)
+    demo_run_p.add_argument("--top-n", type=int, default=5)
+    demo_run_p.add_argument("--channel", default=None)
+    demo_run_p.add_argument("--max-attempts", type=int, default=1)
+    demo_run_p.add_argument("--resolved-entities-jsonl", default=None)
+    demo_run_p.add_argument("--outcomes-jsonl", default=None)
+
     return parser
 
 
@@ -175,6 +187,20 @@ def main(argv: list[str] | None = None) -> int:
             window_end=args.window_end,
             success_within_hours=args.success_within_hours,
             auto_review_decision=args.auto_review_decision,
+        )
+        print(json.dumps(summary))
+        return 0
+
+    if args.command == "demo" and args.demo_cmd == "run-once":
+        summary = run_demo_once(
+            workspace=Path(args.workspace),
+            window_key=args.window_key,
+            limit=args.limit,
+            top_n=args.top_n,
+            channel=args.channel,
+            max_attempts=args.max_attempts,
+            resolved_entities_jsonl=Path(args.resolved_entities_jsonl) if args.resolved_entities_jsonl else None,
+            outcomes_jsonl=Path(args.outcomes_jsonl) if args.outcomes_jsonl else None,
         )
         print(json.dumps(summary))
         return 0

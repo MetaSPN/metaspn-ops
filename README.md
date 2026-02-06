@@ -231,6 +231,26 @@ Outputs:
 - `./store/m3_calibration_reports.jsonl`
 - `./store/m3_calibration_reviews.jsonl`
 
+## Demo Orchestration
+
+Run one-shot demo sequence (profile -> score -> route -> digest -> optional draft) and optionally ingest manual outcomes:
+
+```bash
+metaspn demo run-once \
+  --workspace . \
+  --window-key 2026-02-06 \
+  --limit 100 \
+  --top-n 5 \
+  --channel email \
+  --max-attempts 1 \
+  --resolved-entities-jsonl ./resolved_entities.jsonl \
+  --outcomes-jsonl ./manual_outcomes.jsonl
+```
+
+Notes:
+- `--max-attempts` defaults to `1` in demo mode for predictable failure behavior.
+- Re-running with the same inputs is idempotent at output artifact level.
+
 ## Queue layout
 
 ```text
