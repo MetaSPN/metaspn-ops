@@ -8,6 +8,7 @@ from .scheduler import TaskScheduler
 from .types import Result, Task
 from .workers import HeuristicEntityResolver, IngestSocialWorker, JsonlStoreAdapter, ResolveEntityWorker
 from .workers import M1JsonlStore, ProfilerWorker, RouterWorker, ScorerWorker
+from .workers import ApprovalWorker, DigestWorker, DrafterWorker, M2JsonlStore
 
 __all__ = [
     "FilesystemQueue",
@@ -27,4 +28,8 @@ __all__ = [
     "ProfilerWorker",
     "ScorerWorker",
     "RouterWorker",
+    "M2JsonlStore",
+    "DigestWorker",
+    "DrafterWorker",
+    "ApprovalWorker",
 ]

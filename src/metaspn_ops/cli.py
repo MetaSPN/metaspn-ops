@@ -8,7 +8,7 @@ from pathlib import Path
 
 from .fs_queue import FilesystemQueue
 from .runner import RunnerConfig, WorkerRunner
-from .workers import run_local_m0, run_local_m1
+from .workers import run_local_m0, run_local_m1, run_local_m2
 
 
 def _load_worker(spec: str):
@@ -85,6 +85,14 @@ def build_parser() -> argparse.ArgumentParser:
     m1_run_p.add_argument("--workspace", default=".")
     m1_run_p.add_argument("--limit", type=int, default=100)
 
+    m2_p = sub.add_parser("m2")
+    m2_sub = m2_p.add_subparsers(dest="m2_cmd", required=True)
+    m2_run_p = m2_sub.add_parser("run-local")
+    m2_run_p.add_argument("--workspace", default=".")
+    m2_run_p.add_argument("--window-key", required=True)
+    m2_run_p.add_argument("--top-n", type=int, default=5)
+    m2_run_p.add_argument("--channel", default="email")
+
     return parser
 
 
@@ -137,6 +145,16 @@ def main(argv: list[str] | None = None) -> int:
         summary = run_local_m1(
             workspace=Path(args.workspace),
             limit=args.limit,
+        )
+        print(json.dumps(summary))
+        return 0
+
+    if args.command == "m2" and args.m2_cmd == "run-local":
+        summary = run_local_m2(
+            workspace=Path(args.workspace),
+            window_key=args.window_key,
+            top_n=args.top_n,
+            channel=args.channel,
         )
         print(json.dumps(summary))
         return 0

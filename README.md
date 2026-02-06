@@ -170,6 +170,44 @@ Outputs:
 }
 ```
 
+## M2 Local Recommendations Surfaces
+
+Prerequisite: `./store/m1_routes.jsonl` exists with recommendation candidates.
+
+```bash
+metaspn m2 run-local --workspace . --window-key 2026-02-06 --top-n 5 --channel email
+```
+
+Outputs:
+- `./store/m2_digests.jsonl`
+- `./store/m2_drafts.jsonl`
+- `./store/m2_approvals.jsonl`
+
+### M2 payload contracts
+
+`digest_recommendations` task payload:
+
+```json
+{ "window_key": "2026-02-06", "top_n": 5 }
+```
+
+`draft_outreach` task payload:
+
+```json
+{ "digest_id": "digest_...", "channel": "email" }
+```
+
+`capture_approval` task payload:
+
+```json
+{
+  "draft_id": "draft_...",
+  "decision": "approve",
+  "override_body": "optional edited body",
+  "editor": "human_name"
+}
+```
+
 ## Queue layout
 
 ```text

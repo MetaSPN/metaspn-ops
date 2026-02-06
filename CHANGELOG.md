@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.4 - 2026-02-06
+
+- Added M2 workers:
+  - `DigestWorker` for deterministic ranked daily top-N digests
+  - `DrafterWorker` for channel-specific outreach drafts
+  - `ApprovalWorker` for approve/edit/reject capture with override support
+- Added `metaspn m2 run-local --workspace ... --window-key ... --top-n ... --channel ...`
+- Added end-to-end tests for recommend -> digest -> draft -> approval flow with duplicate-safe retries
+
 ## 0.1.3 - 2026-02-06
 
 - Fixed filesystem lease race conditions with atomic lock publication (`tempfile + link`) and conservative parse handling
