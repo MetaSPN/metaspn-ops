@@ -6,6 +6,7 @@ from .lease import LeaseManager
 from .runner import Worker, WorkerRunner
 from .scheduler import TaskScheduler
 from .types import Result, Task
+from .workers import HeuristicEntityResolver, IngestSocialWorker, JsonlStoreAdapter, ResolveEntityWorker
 
 __all__ = [
     "FilesystemQueue",
@@ -17,4 +18,8 @@ __all__ = [
     "TaskScheduler",
     "Worker",
     "WorkerRunner",
+    "IngestSocialWorker",
+    "ResolveEntityWorker",
+    "JsonlStoreAdapter",
+    "HeuristicEntityResolver",
 ]

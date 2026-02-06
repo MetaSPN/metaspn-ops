@@ -47,6 +47,61 @@ metaspn queue deadletter list enrich --workspace .
 metaspn queue retry enrich --workspace .
 ```
 
+## M0 Local Ingestion Flow
+
+One command local run sequence (ingest + resolve):
+
+```bash
+metaspn m0 run-local --workspace . --input-jsonl ./sample_social.jsonl
+```
+
+This writes:
+- `./store/signals.jsonl`
+- `./store/emissions.jsonl`
+
+### M0 task/result contracts
+
+`ingest_social` task payload:
+
+```json
+{
+  "input_jsonl_path": "/abs/or/rel/path.jsonl",
+  "source": "social.ingest",
+  "schema_version": "v1",
+  "max_records": 100
+}
+```
+
+`ingest_social` result payload:
+
+```json
+{
+  "ingested": 10,
+  "duplicates": 0,
+  "total_seen": 10,
+  "signal_ids": ["sig_..."]
+}
+```
+
+`resolve_entity` task payload:
+
+```json
+{
+  "limit": 100
+}
+```
+
+`resolve_entity` result payload:
+
+```json
+{
+  "resolved": 10,
+  "duplicates": 0,
+  "considered": 10,
+  "emission_ids": ["em_..."]
+}
+```
+
 ## Queue layout
 
 ```text

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.2 - 2026-02-06
+
+- Added M0 worker templates:
+  - `IngestSocialWorker` for JSONL ingestion into signal envelopes
+  - `ResolveEntityWorker` for unresolved signal resolution into emissions
+- Added local JSONL store adapter and heuristic resolver templates for local execution
+- Added `metaspn m0 run-local --workspace ... --input-jsonl ...` command
+- Added queue execution tests for ingest + resolve path and duplicate-safe retries
+
 ## 0.1.1 - 2026-02-06
 
 - Stabilized test import paths for `src/` layout by adding `tests/conftest.py`

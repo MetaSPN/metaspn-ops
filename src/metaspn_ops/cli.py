@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .fs_queue import FilesystemQueue
 from .runner import RunnerConfig, WorkerRunner
+from .workers import run_local_m0
 
 
 def _load_worker(spec: str):
@@ -71,6 +72,13 @@ def build_parser() -> argparse.ArgumentParser:
     dl_list_p.add_argument("worker")
     dl_list_p.add_argument("--workspace", default=".")
 
+    m0_p = sub.add_parser("m0")
+    m0_sub = m0_p.add_subparsers(dest="m0_cmd", required=True)
+    m0_run_p = m0_sub.add_parser("run-local")
+    m0_run_p.add_argument("--workspace", default=".")
+    m0_run_p.add_argument("--input-jsonl", required=True)
+    m0_run_p.add_argument("--max-records", type=int, default=None)
+
     return parser
 
 
@@ -108,6 +116,15 @@ def main(argv: list[str] | None = None) -> int:
         queue = FilesystemQueue(workspace=Path(args.workspace), worker_name=args.worker)
         items = [str(p) for p in queue.deadletter_items()]
         print(json.dumps({"items": items}))
+        return 0
+
+    if args.command == "m0" and args.m0_cmd == "run-local":
+        summary = run_local_m0(
+            workspace=Path(args.workspace),
+            input_jsonl_path=Path(args.input_jsonl),
+            max_records=args.max_records,
+        )
+        print(json.dumps(summary))
         return 0
 
     parser.print_help()
