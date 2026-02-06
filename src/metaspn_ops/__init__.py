@@ -1,6 +1,6 @@
 """metaspn-ops public API."""
 
-from .backends import QueueBackend, SQLiteQueueStub
+from .backends import QueueBackend
 from .fs_queue import FilesystemQueue
 from .lease import LeaseManager
 from .runner import Worker, WorkerRunner
@@ -21,7 +21,6 @@ __all__ = [
     "FilesystemQueue",
     "LeaseManager",
     "QueueBackend",
-    "SQLiteQueueStub",
     "Task",
     "Result",
     "TaskScheduler",

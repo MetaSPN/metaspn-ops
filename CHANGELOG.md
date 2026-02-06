@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.6 - 2026-02-06
+
+- Removed `SQLiteQueueStub` from `metaspn_ops.backends` and top-level package exports
+- Public API now explicitly reflects filesystem queue runtime in `metaspn-ops`
+- Added regression test to ensure removed symbol is not reintroduced
+
+Migration note:
+- If downstream code imports `SQLiteQueueStub`, remove that import and use `FilesystemQueue` from `metaspn_ops` for queue/runtime concerns.
+
 ## 0.1.5 - 2026-02-06
 
 - Added M3 operational learning workers:
