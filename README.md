@@ -64,7 +64,7 @@ workspace/
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .[dev]
-PYTHONPATH=src python -m unittest discover -s tests -v
+python -m pytest -q
 python -m build
 python -m twine check dist/*
 ```
