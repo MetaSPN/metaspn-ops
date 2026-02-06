@@ -8,7 +8,7 @@ from pathlib import Path
 
 from .fs_queue import FilesystemQueue
 from .runner import RunnerConfig, WorkerRunner
-from .workers import run_local_m0, run_local_m1, run_local_m2
+from .workers import run_local_m0, run_local_m1, run_local_m2, run_local_m3
 
 
 def _load_worker(spec: str):
@@ -93,6 +93,15 @@ def build_parser() -> argparse.ArgumentParser:
     m2_run_p.add_argument("--top-n", type=int, default=5)
     m2_run_p.add_argument("--channel", default="email")
 
+    m3_p = sub.add_parser("m3")
+    m3_sub = m3_p.add_subparsers(dest="m3_cmd", required=True)
+    m3_run_p = m3_sub.add_parser("run-local")
+    m3_run_p.add_argument("--workspace", default=".")
+    m3_run_p.add_argument("--window-start", required=True)
+    m3_run_p.add_argument("--window-end", required=True)
+    m3_run_p.add_argument("--success-within-hours", type=int, default=72)
+    m3_run_p.add_argument("--auto-review-decision", default=None)
+
     return parser
 
 
@@ -155,6 +164,17 @@ def main(argv: list[str] | None = None) -> int:
             window_key=args.window_key,
             top_n=args.top_n,
             channel=args.channel,
+        )
+        print(json.dumps(summary))
+        return 0
+
+    if args.command == "m3" and args.m3_cmd == "run-local":
+        summary = run_local_m3(
+            workspace=Path(args.workspace),
+            window_start=args.window_start,
+            window_end=args.window_end,
+            success_within_hours=args.success_within_hours,
+            auto_review_decision=args.auto_review_decision,
         )
         print(json.dumps(summary))
         return 0

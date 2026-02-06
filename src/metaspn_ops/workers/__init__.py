@@ -7,6 +7,14 @@ from .m0 import (
 )
 from .m1 import M1JsonlStore, ProfilerWorker, RouterWorker, ScorerWorker, run_local_m1
 from .m2 import ApprovalWorker, DigestWorker, DrafterWorker, M2JsonlStore, run_local_m2
+from .m3 import (
+    CalibrationReporterWorker,
+    CalibrationReviewWorker,
+    FailureAnalystWorker,
+    M3JsonlStore,
+    OutcomeEvaluatorWorker,
+    run_local_m3,
+)
 
 __all__ = [
     "HeuristicEntityResolver",
@@ -24,4 +32,10 @@ __all__ = [
     "DrafterWorker",
     "ApprovalWorker",
     "run_local_m2",
+    "M3JsonlStore",
+    "OutcomeEvaluatorWorker",
+    "FailureAnalystWorker",
+    "CalibrationReporterWorker",
+    "CalibrationReviewWorker",
+    "run_local_m3",
 ]

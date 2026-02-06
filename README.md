@@ -208,6 +208,29 @@ Outputs:
 }
 ```
 
+## M3 Local Learning Loop
+
+Prerequisite:
+- `./store/m3_attempts.jsonl`
+- `./store/m3_outcomes.jsonl`
+
+Run evaluate -> failure analysis -> calibration report (and optional review):
+
+```bash
+metaspn m3 run-local \
+  --workspace . \
+  --window-start 2026-02-01T00:00:00+00:00 \
+  --window-end 2026-02-03T00:00:00+00:00 \
+  --success-within-hours 48 \
+  --auto-review-decision approve
+```
+
+Outputs:
+- `./store/m3_evaluations.jsonl`
+- `./store/m3_failures.jsonl`
+- `./store/m3_calibration_reports.jsonl`
+- `./store/m3_calibration_reviews.jsonl`
+
 ## Queue layout
 
 ```text

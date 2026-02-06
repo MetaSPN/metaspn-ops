@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.5 - 2026-02-06
+
+- Added M3 operational learning workers:
+  - `OutcomeEvaluatorWorker`
+  - `FailureAnalystWorker`
+  - `CalibrationReporterWorker`
+  - `CalibrationReviewWorker`
+- Added `metaspn m3 run-local` command for scheduled evaluate/analyze/report/review flow
+- Added end-to-end tests for attempt -> outcome -> failure -> calibration pipeline
+- Added deterministic, reviewable calibration proposal capture without implicit policy mutation
+
 ## 0.1.4 - 2026-02-06
 
 - Added M2 workers:
