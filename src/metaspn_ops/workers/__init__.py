@@ -5,6 +5,7 @@ from .m0 import (
     ResolveEntityWorker,
     run_local_m0,
 )
+from .m1 import M1JsonlStore, ProfilerWorker, RouterWorker, ScorerWorker, run_local_m1
 
 __all__ = [
     "HeuristicEntityResolver",
@@ -12,4 +13,9 @@ __all__ = [
     "JsonlStoreAdapter",
     "ResolveEntityWorker",
     "run_local_m0",
+    "M1JsonlStore",
+    "ProfilerWorker",
+    "ScorerWorker",
+    "RouterWorker",
+    "run_local_m1",
 ]

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -48,11 +49,14 @@ class LeaseManager:
         lease = Lease(task_id, worker_name, owner, now, expires_at)
 
         try:
-            fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-            with os.fdopen(fd, "w", encoding="utf-8") as f:
-                json.dump(lease.to_dict(), f)
+            tmp_path = self._write_temp_lock(lease)
+            os.link(tmp_path, lock_path)
+            tmp_path.unlink(missing_ok=True)
             return lease
         except FileExistsError:
+            tmp_path = locals().get("tmp_path")
+            if tmp_path is not None:
+                tmp_path.unlink(missing_ok=True)
             if self._is_expired(lock_path, now):
                 self.break_lease(task_id)
                 return self.try_acquire(
@@ -79,4 +83,20 @@ class LeaseManager:
                 expires_at = expires_at.replace(tzinfo=timezone.utc)
             return expires_at <= now
         except Exception:
-            return True
+            return False
+
+    def _write_temp_lock(self, lease: Lease) -> Path:
+        fd, raw_path = tempfile.mkstemp(prefix=".locktmp_", suffix=".json", dir=str(self.lock_dir))
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(lease.to_dict(), f)
+                f.flush()
+                os.fsync(f.fileno())
+            return Path(raw_path)
+        except Exception:
+            try:
+                os.close(fd)
+            except Exception:
+                pass
+            Path(raw_path).unlink(missing_ok=True)
+            raise

@@ -102,6 +102,74 @@ This writes:
 }
 ```
 
+## M1 Local Routing Flow
+
+Prerequisite: `./store/emissions.jsonl` contains `entity.resolved` emissions.
+
+Run profile -> score -> route in one command:
+
+```bash
+metaspn m1 run-local --workspace . --limit 100
+```
+
+Outputs:
+- `./store/m1_profiles.jsonl`
+- `./store/m1_scores.jsonl`
+- `./store/m1_routes.jsonl`
+
+### M1 payload contracts
+
+`profile_entity` task payload:
+
+```json
+{ "limit": 100 }
+```
+
+`profile_entity` result payload:
+
+```json
+{
+  "profiled": 10,
+  "duplicates": 0,
+  "considered": 10,
+  "profile_ids": ["profile_..."]
+}
+```
+
+`score_entity` task payload:
+
+```json
+{ "limit": 100 }
+```
+
+`score_entity` result payload:
+
+```json
+{
+  "scored": 10,
+  "duplicates": 0,
+  "considered": 10,
+  "score_ids": ["score_..."]
+}
+```
+
+`route_entity` task payload:
+
+```json
+{ "limit": 100 }
+```
+
+`route_entity` result payload:
+
+```json
+{
+  "routed": 10,
+  "duplicates": 0,
+  "considered": 10,
+  "route_ids": ["route_..."]
+}
+```
+
 ## Queue layout
 
 ```text

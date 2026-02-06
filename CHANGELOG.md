@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.3 - 2026-02-06
+
+- Fixed filesystem lease race conditions with atomic lock publication (`tempfile + link`) and conservative parse handling
+- Added M1 worker runtime templates:
+  - `ProfilerWorker`
+  - `ScorerWorker`
+  - `RouterWorker`
+- Added `metaspn m1 run-local --workspace ... --limit ...` one-command local stage chain
+- Added integration tests for profile->score->route chaining and duplicate-safe retries
+- Added lease race regression tests
+
 ## 0.1.2 - 2026-02-06
 
 - Added M0 worker templates:
