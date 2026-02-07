@@ -278,6 +278,99 @@ Evaluation paths:
 Optional digest integration:
 - `DigestWorker` supports `include_token_health=true` and `include_promise_items=true` in task payload.
 
+## Season 1 Operations Pipeline
+
+Run attention update -> reward projection -> settlement -> season summary publishing:
+
+```bash
+metaspn s1 run-local \
+  --workspace . \
+  --date 2026-02-07
+```
+
+Outputs:
+- `./store/s1_attention_scores.jsonl`
+- `./store/s1_reward_projections.jsonl`
+- `./store/s1_settlements.jsonl`
+- `./store/s1_summaries.jsonl`
+
+### Season 1 task/result contracts
+
+`update_attention_scores` task payload:
+
+```json
+{ "date": "2026-02-07" }
+```
+
+`update_attention_scores` result payload:
+
+```json
+{
+  "season_date": "2026-02-07",
+  "updated": 10,
+  "duplicates": 0,
+  "considered": 10,
+  "attention_ids": ["att_..."]
+}
+```
+
+`project_rewards` task payload:
+
+```json
+{ "date": "2026-02-07", "multiplier": 1.2 }
+```
+
+`project_rewards` result payload:
+
+```json
+{
+  "season_date": "2026-02-07",
+  "projected": 10,
+  "duplicates": 0,
+  "considered": 10,
+  "projection_ids": ["reward_..."]
+}
+```
+
+`settle_season` task payload:
+
+```json
+{ "date": "2026-02-07" }
+```
+
+`settle_season` result payload:
+
+```json
+{
+  "season_date": "2026-02-07",
+  "settled": 10,
+  "duplicates": 0,
+  "considered": 10,
+  "settlement_ids": ["settlement_..."]
+}
+```
+
+`publish_season_summary` task payload:
+
+```json
+{ "date": "2026-02-07" }
+```
+
+`publish_season_summary` result payload:
+
+```json
+{
+  "season_date": "2026-02-07",
+  "summary_id": "summary_...",
+  "participants": 10,
+  "total_reward": 725.4,
+  "duplicate": false
+}
+```
+
+Runbook:
+- `RUNBOOK-S1.md`
+
 ## Queue layout
 
 ```text

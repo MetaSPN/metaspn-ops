@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.9 - 2026-02-07
+
+- Added Season 1 workers:
+  - `UpdateAttentionScoresWorker`
+  - `ProjectRewardsWorker`
+  - `SettleSeasonWorker`
+  - `PublishSeasonSummaryWorker`
+- Added `metaspn s1 run-local --workspace ... --date YYYY-MM-DD` orchestration command
+- Added Season 1 task/result contracts to `README.md`
+- Added `RUNBOOK-S1.md` with retry/backoff/dead-letter operational procedures
+- Added integration tests for Season 1 idempotency and retry/dead-letter behavior
+
 ## 0.1.8 - 2026-02-06
 
 - Added token/promise workers:

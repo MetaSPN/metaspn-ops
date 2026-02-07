@@ -25,6 +25,14 @@ from .workers import (
     TokenPromiseStore,
     run_local_token_promises,
 )
+from .workers import (
+    ProjectRewardsWorker,
+    PublishSeasonSummaryWorker,
+    S1JsonlStore,
+    SettleSeasonWorker,
+    UpdateAttentionScoresWorker,
+    run_local_s1,
+)
 
 __all__ = [
     "FilesystemQueue",
@@ -61,4 +69,10 @@ __all__ = [
     "PromiseEvaluatorWorker",
     "PromiseCalibrationWorker",
     "run_local_token_promises",
+    "S1JsonlStore",
+    "UpdateAttentionScoresWorker",
+    "ProjectRewardsWorker",
+    "SettleSeasonWorker",
+    "PublishSeasonSummaryWorker",
+    "run_local_s1",
 ]

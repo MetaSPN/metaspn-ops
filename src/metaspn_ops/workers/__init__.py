@@ -24,6 +24,14 @@ from .token_promises import (
     TokenPromiseStore,
     run_local_token_promises,
 )
+from .s1 import (
+    ProjectRewardsWorker,
+    PublishSeasonSummaryWorker,
+    S1JsonlStore,
+    SettleSeasonWorker,
+    UpdateAttentionScoresWorker,
+    run_local_s1,
+)
 
 __all__ = [
     "HeuristicEntityResolver",
@@ -56,4 +64,10 @@ __all__ = [
     "PromiseEvaluatorWorker",
     "PromiseCalibrationWorker",
     "run_local_token_promises",
+    "S1JsonlStore",
+    "UpdateAttentionScoresWorker",
+    "ProjectRewardsWorker",
+    "SettleSeasonWorker",
+    "PublishSeasonSummaryWorker",
+    "run_local_s1",
 ]

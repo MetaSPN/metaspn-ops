@@ -8,7 +8,15 @@ from pathlib import Path
 
 from .fs_queue import FilesystemQueue
 from .runner import RunnerConfig, WorkerRunner
-from .workers import run_demo_once, run_local_m0, run_local_m1, run_local_m2, run_local_m3, run_local_token_promises
+from .workers import (
+    run_demo_once,
+    run_local_m0,
+    run_local_m1,
+    run_local_m2,
+    run_local_m3,
+    run_local_s1,
+    run_local_token_promises,
+)
 
 
 def _load_worker(spec: str):
@@ -122,6 +130,12 @@ def build_parser() -> argparse.ArgumentParser:
     token_run_p.add_argument("--limit", type=int, default=100)
     token_run_p.add_argument("--baseline-weight", type=float, default=1.0)
 
+    s1_p = sub.add_parser("s1")
+    s1_sub = s1_p.add_subparsers(dest="s1_cmd", required=True)
+    s1_run_p = s1_sub.add_parser("run-local")
+    s1_run_p.add_argument("--workspace", default=".")
+    s1_run_p.add_argument("--date", required=True)
+
     return parser
 
 
@@ -219,6 +233,14 @@ def main(argv: list[str] | None = None) -> int:
             window_key=args.window_key,
             limit=args.limit,
             baseline_weight=args.baseline_weight,
+        )
+        print(json.dumps(summary))
+        return 0
+
+    if args.command == "s1" and args.s1_cmd == "run-local":
+        summary = run_local_s1(
+            workspace=Path(args.workspace),
+            date=args.date,
         )
         print(json.dumps(summary))
         return 0
